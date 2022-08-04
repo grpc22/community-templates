@@ -1,0 +1,2311 @@
+zabbix_export:
+  version: '6.0'
+  date: '2022-08-04T21:22:23Z'
+  groups:
+    -
+      uuid: c5381dc540504dbba10e2d300554e4cd
+      name: Firewall
+    -
+      uuid: d69a5c1b9df54f85b87e253ea38fb355
+      name: SonicWall
+  templates:
+    -
+      uuid: 3b8a23eeb648414f9bea3e20f6ab1d38
+      template: 'Sonicwall SNMP - NSa2650'
+      name: 'Sonicwall SNMP - NSa2650'
+      description: |
+        ## Description
+        
+        Template customizado para el NSa2650
+        
+        ## Overview
+        
+         Template Sonicwall NSa2650
+        
+        
+        Performance
+        
+        
+        Status de Portas e Tráfego
+        
+        
+        Triggers de Status de portas, processamento e memória
+        
+        
+        
+        ## Author
+        
+        Ruy Mendonça
+      groups:
+        -
+          name: Firewall
+        -
+          name: SonicWall
+      items:
+        -
+          uuid: 429638d5d3af4c0397f1e1af8f0b7466
+          name: Disponibilidad
+          type: SIMPLE
+          key: icmpping
+          delay: '60'
+          history: 7d
+          trends: 7d
+          valuemap:
+            name: 'Service state'
+          tags:
+            -
+              tag: Application
+              value: 'ICMP Ping'
+          triggers:
+            -
+              uuid: 0afcf29c956840c385da068b85112b23
+              expression: 'max(/Sonicwall SNMP - NSa2650/icmpping,#5)=0'
+              name: '{HOST.NAME} indisponible'
+              priority: AVERAGE
+        -
+          uuid: fefa35bfcb26407abcaea9eb7d7989b9
+          name: 'Pérdida de Paquetes'
+          type: SIMPLE
+          key: icmppingloss
+          delay: '60'
+          history: 7d
+          trends: 7d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            -
+              tag: Application
+              value: 'ICMP Ping'
+          triggers:
+            -
+              uuid: e02fdfa6e1654cffbfc9efcd4c48264a
+              expression: 'min(/Sonicwall SNMP - NSa2650/icmppingloss,5m)>30'
+              name: 'Pérdida de paquetes muy alta en {HOST.NAME}'
+              priority: WARNING
+              dependencies:
+                -
+                  name: '{HOST.NAME} indisponible'
+                  expression: 'max(/Sonicwall SNMP - NSa2650/icmpping,#5)=0'
+        -
+          uuid: 5087026fa68440f593034bbf6b270c63
+          name: Latencia
+          type: SIMPLE
+          key: icmppingsec
+          delay: '60'
+          history: 7d
+          trends: 7d
+          value_type: FLOAT
+          units: s
+          tags:
+            -
+              tag: Application
+              value: 'ICMP Ping'
+          triggers:
+            -
+              uuid: 3ab7b76ff0f34165854e29384309c543
+              expression: 'avg(/Sonicwall SNMP - NSa2650/icmppingsec,5m)>0.30'
+              name: 'Tiempo de respuesta muy alta en {HOST.NAME}'
+              priority: INFO
+              dependencies:
+                -
+                  name: '{HOST.NAME} indisponible'
+                  expression: 'max(/Sonicwall SNMP - NSa2650/icmpping,#5)=0'
+        -
+          uuid: d3fb410102694df5bd8627cd30755bcc
+          name: 'X0 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.1
+          key: ifInOctets.1
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 3c1719e3b8034c6e83a1a64369558010
+          name: 'X1 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.2
+          key: ifInOctets.2
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 66c77023af7d40cd969e327cb5177a20
+          name: 'X2 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.3
+          key: ifInOctets.3
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: edc67a72db0f4db8b0482892b28436bd
+          name: 'X3 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.4
+          key: ifInOctets.4
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 198d07a92612406c88987e97b02130c6
+          name: 'X4 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.5
+          key: ifInOctets.5
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: c15d2b6ad651491c96cadb9d161239af
+          name: 'X5 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.6
+          key: ifInOctets.6
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 580c56264e604e8c9fc9799066d56b0e
+          name: 'X6 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.7
+          key: ifInOctets.7
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 43c5d6fdaf494131a0f0cd182fefea40
+          name: 'X7 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.8
+          key: ifInOctets.8
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: a0c4ec89babc4564912177c9c1137c07
+          name: 'X8 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.9
+          key: ifInOctets.9
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 910753713f7547d6aeb9d8b057180971
+          name: 'X9 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.10
+          key: ifInOctets.10
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: fbec6c0c47ea4736975d8f25307564f1
+          name: 'X10 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.11
+          key: ifInOctets.11
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 24b4e13ce0a64958b25beef5f8c3d396
+          name: 'X11 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.12
+          key: ifInOctets.12
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: aeff72795fff4c1094509b3be735732f
+          name: 'X12 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.13
+          key: ifInOctets.13
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 9cd497b666484d30bed8b9802a0c028e
+          name: 'X13 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.14
+          key: ifInOctets.14
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: fcfc128fd56841b1b624523088a5928a
+          name: 'X14 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.15
+          key: ifInOctets.15
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 0716fc991ab84f0ba765b19abfbbc4e9
+          name: 'X15 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.16
+          key: ifInOctets.16
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: ab5b4577ec924b50a843c9bf37935e91
+          name: 'X16 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.17
+          key: ifInOctets.17
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 6acb885e270f442d986360fa33724b66
+          name: 'X17 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.18
+          key: ifInOctets.18
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 2cbdc3dc233b4e4db4f26a545380bac1
+          name: 'X18 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.19
+          key: ifInOctets.19
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: c72e81cf77ac456b9eef987e15c49096
+          name: 'X19 Bytes In/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.10.20
+          key: ifInOctets.20
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: ee940d5f00af47d88934a97ece8cde0d
+          name: 'Status X0'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.1
+          key: ifOperStatus.1
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 3342b5cfa5dd4be2b52a10cdca0725f6
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.1)=0'
+              name: 'Enlace en Puerto X0 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X0 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X0 está Down'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.1)=0'
+            -
+              uuid: 4ca9dfb3c38442bf83bb25f9dd3fa85f
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.1)=0'
+              name: 'Puerto X0 está Down'
+              priority: HIGH
+              description: 'Enlace en Puerto X0 está caído'
+        -
+          uuid: 30a396759c83462da6a7a3af7208c2a8
+          name: 'Status X1'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.2
+          key: ifOperStatus.2
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: ea3aac53be404946865ce9020473ceb4
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.2)=0'
+              name: 'Enlace en Puerto X1 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X1 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X1 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.2)=0'
+            -
+              uuid: 0153629d269d4818929273d87aa1739b
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.2)=0'
+              name: 'Puerto X1 está caído'
+              priority: HIGH
+              description: 'Verifica se el Puerto X1 está caído'
+        -
+          uuid: aeb112ef96da42fd8ab3a51969f8e235
+          name: 'Status X2'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.3
+          key: ifOperStatus.3
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: cf585fd9560b4b6b9ce54291f7f82f09
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.3)=0'
+              name: 'Enlace en Puerto X2 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X2 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X2 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.3)=0'
+            -
+              uuid: 609dc5105b31434c8d4f90383c6d3a25
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.3)=0'
+              name: 'Puerto X2 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X2 está caído'
+        -
+          uuid: 2df4ec9f24464f248562f372b9a36f94
+          name: 'Status X3'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.4
+          key: ifOperStatus.4
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 6d88fac855354a3ebd64655407323fb7
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.4)=0'
+              name: 'Enlace en Puerto X3 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X3 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X3 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.4)=0'
+            -
+              uuid: 600c55adb41f4d70834b1d6ddc07ef95
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.4)=0'
+              name: 'Puerto X3 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X3 está caído'
+        -
+          uuid: 14fbc9e99d6946ab970c3d3e30653850
+          name: 'Status X4'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.5
+          key: ifOperStatus.5
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 4cb0699a90784100ad4996f8623ca2c1
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.5)=0'
+              name: 'Enlace en Puerto X4 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X4 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X4 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.5)=0'
+            -
+              uuid: 8e3e0a58078646b49f1e6f5751b4da39
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.5)=0'
+              name: 'Puerto X4 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X4 está caído'
+        -
+          uuid: 874d55f4a9124539a7af86ae2dc1a5c6
+          name: 'Status X5'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.6
+          key: ifOperStatus.6
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 8d3f8d568425402a88f20e526a4ef0bb
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.6)=0'
+              name: 'Enlace en Puerto X5 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X5 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X5 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.6)=0'
+            -
+              uuid: 49f4246efc6c4d8fb97c7552e3b8389a
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.6)=0'
+              name: 'Puerto X5 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X5 está caído'
+        -
+          uuid: dd18eb7cc04f4e37a99a2b69d862c417
+          name: 'Status X6'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.7
+          key: ifOperStatus.7
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 687a07543f374a078fdf3e3ab5cd9ee1
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.7)=0'
+              name: 'Enlace en Puerto X6 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X6 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X6 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.7)=0'
+            -
+              uuid: 69bcc90eb61b45bfbe9451d1a203de4e
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.7)=0'
+              name: 'Puerto X6 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X6 está caído'
+        -
+          uuid: 097a852c54534f91a7564f3a0a2e53e0
+          name: 'Status X7'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.8
+          key: ifOperStatus.8
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 6baa6043bed940b692c37fb951cea6bb
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.8)=0'
+              name: 'Enlace en Puerto X7 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X7 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X7 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.8)=0'
+            -
+              uuid: c6b71443ea42442ebb95e87cda339041
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.8)=0'
+              name: 'Puerto X7 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X7 está caído'
+        -
+          uuid: 193ce165547847edbf771ff2f1f6fe04
+          name: 'Status X8'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.9
+          key: ifOperStatus.9
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 6d3a46de46104d0d8e38f0ff277df6fe
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.9)=0'
+              name: 'Enlace en Puerto X8 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X8 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X8 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.9)=0'
+            -
+              uuid: 6beb3784ca6740fb8ad63220e931ada3
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.9)=0'
+              name: 'Puerto X8 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X8 está caído'
+        -
+          uuid: 7e60336f75b143039b1c14e8cebcd234
+          name: 'Status X9'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.10
+          key: ifOperStatus.10
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: f117ac5e58334cf8bab4a4c25306ea18
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.10)=0'
+              name: 'Enlace en Puerto X9 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X9 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X9 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.10)=0'
+            -
+              uuid: eb6863503c2040778e517e917c47cf8f
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.10)=0'
+              name: 'Puerto X9 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X9 está caído'
+        -
+          uuid: 33f584bc2916411ebb70edd6266cedc7
+          name: 'Status X10'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.11
+          key: ifOperStatus.11
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 750064b14c1648b9b0f5af6979adc93c
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.11)=0'
+              name: 'Enlace en Puerto X10 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X10 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X10 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.11)=0'
+            -
+              uuid: d93781e94e9d420282cbf1392b9908c6
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.11)=0'
+              name: 'Puerto X10 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X10 está caído'
+        -
+          uuid: 606b69d463f84d558c544cbe4e7fbbcc
+          name: 'Status X11'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.12
+          key: ifOperStatus.12
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 31397ddbcd9848e598356402012b09cc
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.12)=0'
+              name: 'Enlace en Puerto X11 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X11 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X11 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.12)=0'
+            -
+              uuid: 5a329846243a4c04a7fc0fa1537dd707
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.12)=0'
+              name: 'Puerto X11 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X11 está caído'
+        -
+          uuid: d01221871cb74a5aabf7c81a76f8dd98
+          name: 'Status X12'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.13
+          key: ifOperStatus.13
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: d0a0589aa5c144d3aa9718eaf0cd8f9c
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.13)=0'
+              name: 'Enlace en Puerto X12 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X12 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X12 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.13)=0'
+            -
+              uuid: 5a80cb00b029409dab0ff015da34fa17
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.13)=0'
+              name: 'Puerto X12 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X12 está caído'
+        -
+          uuid: 1692324dda9f41c7bc1626a17c945bd6
+          name: 'Status X13'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.14
+          key: ifOperStatus.14
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 760e772a45d243548b79470703ed3be2
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.14)=0'
+              name: 'Enlace en Puerto X13 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X13 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X13 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.14)=0'
+            -
+              uuid: 7e00b47882414ea4967977d16eabb49d
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.14)=0'
+              name: 'Puerto X13 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X13 está caído'
+        -
+          uuid: ea02c40c55db4207adf3c614231630e9
+          name: 'Status X14'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.15
+          key: ifOperStatus.15
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 24ae0bcf2c984dda88215496888dcd0a
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.15)=0'
+              name: 'Enlace en Puerto X14 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X14 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X14 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.15)=0'
+            -
+              uuid: 2df72946cbee41408e94d8a2b6516d9a
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.15)=0'
+              name: 'Puerto X14 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X14 está caído'
+        -
+          uuid: 70df4a0e1c2c42b3aff2f5cb79201edb
+          name: 'Status X15'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.16
+          key: ifOperStatus.16
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: dba24db01789456193bf78be28c2b2f0
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.16)=0'
+              name: 'Enlace en Puerto X15 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X15 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X15 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.16)=0'
+            -
+              uuid: d65d54f6ae564d56b7dcf78e107b7170
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.16)=0'
+              name: 'Puerto X15 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X15 está caído'
+        -
+          uuid: 952506c86d3b42d2ad10359b1c319caa
+          name: 'Status X16'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.17
+          key: ifOperStatus.17
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: bc8804db012c4273b48dd7fc447c79f2
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.17)=0'
+              name: 'Enlace en Puerto X16 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X16 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X16 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.17)=0'
+            -
+              uuid: 3d588fb3453645bb83f716dc03c8c77e
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.17)=0'
+              name: 'Puerto X16 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X16 está caído'
+        -
+          uuid: 41ab4bf218ed4b0e9c1c133d8b35c484
+          name: 'Status X17'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.18
+          key: ifOperStatus.18
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 6bac117d5a414af688422be81013522a
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.18)=0'
+              name: 'Enlace en Puerto X17 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X17 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X17 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.18)=0'
+            -
+              uuid: 7ffcedcabcaa4ddbbe6d9ab20f0a3faf
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.18)=0'
+              name: 'Puerto X17 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X17 está caído'
+        -
+          uuid: deafa473ea7c40219014c3fe7e51aa93
+          name: 'Status X18'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.19
+          key: ifOperStatus.19
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: 0475146a5ad14c768adae4baface2629
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.19)=0'
+              name: 'Enlace en Puerto X18 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X18 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X18 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.19)=0'
+            -
+              uuid: 3a8e9f77f7c44a2ca3d231f4a5d08f01
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.19)=0'
+              name: 'Puerto X18 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X18 está caído'
+        -
+          uuid: a953163b4420419c8ac6c09bfbb96d58
+          name: 'Status X19'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.2.2.1.8.20
+          key: ifOperStatus.20
+          delay: '60'
+          history: 30d
+          valuemap:
+            name: 'SNMP interface status (ifOperStatus)'
+          tags:
+            -
+              tag: Application
+              value: Network
+          triggers:
+            -
+              uuid: e081efc8ab724c9da1e85c01434e2631
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.20)=0'
+              name: 'Enlace en Puerto X19 está caído'
+              priority: HIGH
+              description: 'Verifica si el enlace del puerto X19 está caído.'
+              dependencies:
+                -
+                  name: 'Puerto X19 está caído'
+                  expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.20)=0'
+            -
+              uuid: 72a3afb5e3584bc79bdba3c56453dd3c
+              expression: 'last(/Sonicwall SNMP - NSa2650/ifOperStatus.20)=0'
+              name: 'Puerto X19 está caído'
+              priority: HIGH
+              description: 'Verifica si el Puerto X19 está caído'
+        -
+          uuid: 8cdeef8cf9704481a739d45eb0890baa
+          name: 'X0 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.1
+          key: ifOutOctets.1
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 011ed849787e4d74b47ab2cb6f8cda6d
+          name: 'X1 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.2
+          key: ifOutOctets.2
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 6e2adaf3465945569eba7f2b07bebcf1
+          name: 'X2 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.3
+          key: ifOutOctets.3
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 5649dd01f5644bd7829ea8c29ee18ee4
+          name: 'X3 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.4
+          key: ifOutOctets.4
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 6a56bb00349f403d8cd984bc50f7eecd
+          name: 'X4 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.5
+          key: ifOutOctets.5
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 28c734e0380746019839f4740b77bcdc
+          name: 'X5 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.6
+          key: ifOutOctets.6
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: af0b0493dc3c4922ac2926de8e223853
+          name: 'X6 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.7
+          key: ifOutOctets.7
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 6d0075b1a14d4b88bc0cda47bf66c157
+          name: 'X7 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.8
+          key: ifOutOctets.8
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: da323ac967734bc08b978ee94d3b8a26
+          name: 'X8 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.9
+          key: ifOutOctets.9
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: e028fbe3dc6d4807a37e7ef1435cc089
+          name: 'X9 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.10
+          key: ifOutOctets.10
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 1a0aff12b8a24189bf293a13930d01f9
+          name: 'X10 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.11
+          key: ifOutOctets.11
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 3b41678495654189b8afc539ef55aeae
+          name: 'X11 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.12
+          key: ifOutOctets.12
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: d74d3c2a2bf347c3a3643936453f2e76
+          name: 'X12 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.13
+          key: ifOutOctets.13
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 81db22d115364c84b0deb96eae7478a5
+          name: 'X13 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.14
+          key: ifOutOctets.14
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: ed9b828a6955418e8ece3c7afbe45363
+          name: 'X14 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.15
+          key: ifOutOctets.15
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 3f2444d000e541ffb6913760431304b9
+          name: 'X15 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.16
+          key: ifOutOctets.16
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 0ada7a2802ed4e4ba461d2fa9c66bd66
+          name: 'X16 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.17
+          key: ifOutOctets.17
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: c897a4946b9c4365a66cdbe6c1c83830
+          name: 'X17 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.18
+          key: ifOutOctets.18
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 031f58217f444d8a9b9fe79163dbe233
+          name: 'X18 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.19
+          key: ifOutOctets.19
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: dccb98fd637648b4960fd43bc3294206
+          name: 'X19 Bytes Out/sec'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.2.1.2.2.1.16.20
+          key: ifOutOctets.20
+          delay: '60'
+          history: 30d
+          units: bps
+          preprocessing:
+            -
+              type: CHANGE_PER_SECOND
+              parameters:
+                - ''
+            -
+              type: MULTIPLIER
+              parameters:
+                - '8'
+          tags:
+            -
+              tag: Application
+              value: Network
+        -
+          uuid: 708081f3d750416db243b08e2f71cc1a
+          name: 'Simultaneous connections'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.8741.1.3.1.2.0
+          key: sonicCurrentConnCacheEntries.0
+          delay: '60'
+          history: 30d
+          tags:
+            -
+              tag: Application
+              value: Performance
+          triggers:
+            -
+              uuid: e2c920ebe43d46498764230acf26eae4
+              expression: 'min(/Sonicwall SNMP - NSa2650/sonicCurrentConnCacheEntries.0,300s)>15000'
+              name: 'El número de conexiones simultáneas a sobrepasado las 15000 conexiones, valor actual {ITEM.LASTVALUE}'
+              priority: WARNING
+        -
+          uuid: ae8405a3127a4af0b7125762898de1f4
+          name: 'CPU Load'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.8741.1.3.1.3.0
+          key: sonicCurrentCPUUtil.0
+          delay: '60'
+          history: 30d
+          units: '%'
+          description: 'CPU utilizada'
+          tags:
+            -
+              tag: Application
+              value: Performance
+          triggers:
+            -
+              uuid: 92096433687b479f9f79654775d139f4
+              expression: 'avg(/Sonicwall SNMP - NSa2650/sonicCurrentCPUUtil.0,300s)>90'
+              name: 'Consumo de CPU superior a 90% por 5 minutos.'
+              priority: WARNING
+        -
+          uuid: 8856d3afb97f4ebbb365b0532fa74a82
+          name: RAM
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.8741.1.3.1.4.0
+          key: sonicCurrentRAMUtil.0
+          delay: '60'
+          history: 30d
+          units: '%'
+          description: 'Memória utilizada'
+          tags:
+            -
+              tag: Application
+              value: Performance
+          triggers:
+            -
+              uuid: 5f1169cbca624029a4b0362322c197de
+              expression: 'min(/Sonicwall SNMP - NSa2650/sonicCurrentRAMUtil.0,300s)>90'
+              name: 'Consumo de memória superior a 90% por 5 minutos'
+              priority: WARNING
+        -
+          uuid: 39fb09ffe53444e78aec99e09c2f87a1
+          name: 'Firmware Version'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.8741.2.1.1.3.0
+          key: SysmFirmwareVersion
+          delay: '3600'
+          history: 360d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: Application
+              value: Informação
+        -
+          uuid: 3936e98fdfba40a9a2a38a1789059026
+          name: Model
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.8741.2.1.1.1.0
+          key: SysmModel
+          delay: '86400'
+          history: 30d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: Application
+              value: Informação
+        -
+          uuid: b7f5ade77d914269b0ba859b644940a6
+          name: 'Serial Number'
+          type: SNMP_AGENT
+          snmp_oid: .1.3.6.1.4.1.8741.2.1.1.2.0
+          key: SysmSerialNumber
+          delay: '3600'
+          history: 30d
+          trends: '0'
+          value_type: TEXT
+          tags:
+            -
+              tag: Application
+              value: Informação
+        -
+          uuid: 11a05cfb7d9547ec9b252e69e8bbee79
+          name: 'Sonicwall Up Time'
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.3.0
+          key: sysUpTime.0
+          delay: '60'
+          history: 30d
+          units: uptime
+          preprocessing:
+            -
+              type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            -
+              tag: Application
+              value: Informação
+          triggers:
+            -
+              uuid: fda39578f6fc45b6a747742f14abf6dd
+              expression: 'last(/Sonicwall SNMP - NSa2650/sysUpTime.0)<800'
+              name: 'Firewall acaba de ser reiniciado'
+              priority: HIGH
+      dashboards:
+        -
+          uuid: 4b7f6d4c8baa4664a01aefbd13b8270d
+          name: 'Tela TZ'
+          pages:
+            -
+              widgets:
+                -
+                  type: GRAPH_CLASSIC
+                  width: '8'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Sonicwall SNMP - NSa2650'
+                        name: 'CPU Load %'
+                -
+                  type: GRAPH_CLASSIC
+                  x: '8'
+                  width: '8'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Sonicwall SNMP - NSa2650'
+                        name: 'RAM %'
+                -
+                  type: GRAPH_CLASSIC
+                  x: '16'
+                  width: '8'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Sonicwall SNMP - NSa2650'
+                        name: 'Simultaneous connections'
+                -
+                  type: GRAPH_CLASSIC
+                  'y': '5'
+                  width: '8'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Sonicwall SNMP - NSa2650'
+                        name: 'WAN Default Port'
+                -
+                  type: GRAPH_CLASSIC
+                  x: '8'
+                  'y': '5'
+                  width: '8'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Sonicwall SNMP - NSa2650'
+                        name: 'Tráfico Puerto X0'
+                -
+                  type: GRAPH_CLASSIC
+                  x: '16'
+                  'y': '5'
+                  width: '8'
+                  height: '5'
+                  fields:
+                    -
+                      type: INTEGER
+                      name: source_type
+                      value: '0'
+                    -
+                      type: GRAPH
+                      name: graphid
+                      value:
+                        host: 'Sonicwall SNMP - NSa2650'
+                        name: 'Tráfico Puerto X2'
+      valuemaps:
+        -
+          uuid: ec00244f5fe741f9a3b371e902ff5ad8
+          name: 'Service state'
+          mappings:
+            -
+              value: '0'
+              newvalue: Down
+            -
+              value: '1'
+              newvalue: Up
+        -
+          uuid: 4647ae16ae8f40d7977a38df87dcf778
+          name: 'SNMP interface status (ifOperStatus)'
+          mappings:
+            -
+              value: '1'
+              newvalue: up
+            -
+              value: '2'
+              newvalue: down
+            -
+              value: '3'
+              newvalue: testing
+            -
+              value: '4'
+              newvalue: unknown
+            -
+              value: '5'
+              newvalue: dormant
+            -
+              value: '6'
+              newvalue: notPresent
+            -
+              value: '7'
+              newvalue: lowerLayerDown
+  graphs:
+    -
+      uuid: 19a4bf6c9c4942fb84f419aaa59c153d
+      name: 'CPU Load %'
+      show_work_period: 'NO'
+      show_triggers: 'NO'
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: '009900'
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: sonicCurrentCPUUtil.0
+    -
+      uuid: 9e1e8596d1c34dddb37c7f3ba8796814
+      name: Disponibilidad
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: EE0000
+          calc_fnc: ALL
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: icmppingloss
+        -
+          sortorder: '1'
+          drawtype: GRADIENT_LINE
+          color: 00DD00
+          calc_fnc: ALL
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: icmpping
+        -
+          sortorder: '2'
+          drawtype: GRADIENT_LINE
+          color: '440000'
+          yaxisside: RIGHT
+          calc_fnc: MAX
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: icmppingsec
+    -
+      uuid: e4461ce93d3844778d722452b456a9f0
+      name: Latencia
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: icmppingsec
+    -
+      uuid: 8d801031ae864b9cb18f8ff4c80d2fb5
+      name: 'RAM %'
+      show_work_period: 'NO'
+      show_triggers: 'NO'
+      ymin_type_1: FIXED
+      ymax_type_1: FIXED
+      graph_items:
+        -
+          drawtype: FILLED_REGION
+          color: 00DD00
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: sonicCurrentRAMUtil.0
+    -
+      uuid: 67e15d365a5a4c6bbe42c6293b3bf763
+      name: 'Simultaneous connections'
+      yaxismax: '8000'
+      ymin_type_1: FIXED
+      ymax_type_1: FIXED
+      graph_items:
+        -
+          drawtype: GRADIENT_LINE
+          color: 0000CC
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: sonicCurrentConnCacheEntries.0
+    -
+      uuid: e907a1cc22674dff9369cec5c497e729
+      name: 'Tráfico Puerto X0'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.1
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.1
+    -
+      uuid: 8c7706c163a84bd9a060cdcc1cd84b57
+      name: 'Tráfico Puerto X1'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.2
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.2
+    -
+      uuid: b3f6562a9a3c43a1987acbcea2381e7a
+      name: 'Tráfico Puerto X2'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.3
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.3
+    -
+      uuid: e6c7254a679640a991b92360f31753b0
+      name: 'Tráfico Puerto X3'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.4
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.4
+    -
+      uuid: c5059603229f41f790687097fc788cf5
+      name: 'Tráfico Puerto X4'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.5
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.5
+    -
+      uuid: 7e247b93b1d640ac8472c31dc50a2a1b
+      name: 'Tráfico Puerto X5'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.6
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.6
+    -
+      uuid: b02a4c23f205498fa661ed4f1a3c768b
+      name: 'Tráfico Puerto X6'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.7
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.7
+    -
+      uuid: 706a8bf919884419b4755291ef5c9b1e
+      name: 'Tráfico Puerto X7'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.8
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.8
+    -
+      uuid: b786040b32064006b772f28450ea3306
+      name: 'Tráfico Puerto X8'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.9
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.9
+    -
+      uuid: cced1a1a1d6f4df98013e35f07767b7d
+      name: 'Tráfico Puerto X9'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.10
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.10
+    -
+      uuid: 172131978b4a40bdb829b57b6fc58516
+      name: 'Tráfico Puerto X10'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.11
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.11
+    -
+      uuid: 5c43fde6ccdf49758236ea22e0ce1fab
+      name: 'Tráfico Puerto X11'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.12
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.12
+    -
+      uuid: 8daf4e2fae3c412fa1a783f75ad84ff5
+      name: 'Tráfico Puerto X12'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.13
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.13
+    -
+      uuid: e489292384b7435d8b1947932e209677
+      name: 'Tráfico Puerto X13'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.14
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.14
+    -
+      uuid: c74bfe0627ec4c28b4c7194bdc2695d9
+      name: 'Tráfico Puerto X14'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.15
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.15
+    -
+      uuid: 7b1bd82d37374711baf5c7d9a797ab48
+      name: 'Tráfico Puerto X15'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.16
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.16
+    -
+      uuid: 52fbf85066464ad38500f332a7c4c45b
+      name: 'Tráfico Puerto X16'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.17
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.17
+    -
+      uuid: 51a4d2a9cf7f43caa65571166b238c0a
+      name: 'Tráfico Puerto X17'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.18
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.18
+    -
+      uuid: 54e4881ae132493ab9123d3d2657cbee
+      name: 'Tráfico Puerto X18'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.19
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.19
+    -
+      uuid: b8578d1181ab4a6b922df76376c9bc41
+      name: 'Tráfico Puerto X19'
+      type: STACKED
+      ymin_type_1: FIXED
+      graph_items:
+        -
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.20
+        -
+          sortorder: '1'
+          color: 3333FF
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.20
+    -
+      uuid: a66aa4336cf8444599e5e6519df6a0b5
+      name: 'WAN Default Port'
+      graph_items:
+        -
+          drawtype: FILLED_REGION
+          color: 1A7C11
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifInOctets.2
+        -
+          sortorder: '1'
+          drawtype: FILLED_REGION
+          color: F63100
+          item:
+            host: 'Sonicwall SNMP - NSa2650'
+            key: ifOutOctets.2
